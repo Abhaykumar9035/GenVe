@@ -1,6 +1,6 @@
 import dspy
 from config import config
-
+import google.generativeai as genai
 
 
 class TopicRefinement(dspy.Module):
@@ -33,16 +33,16 @@ class TopicRefinement(dspy.Module):
 
     def get_llm_instance(self):
         """Instantiates the appropriate LLM based on configuration."""
-        if self.llm_choice == "openai":
-            return dspy.LM(api_key=self.llm_config["api_key"], model=self.llm_config["model"])
-        elif self.llm_choice == "google":
-            return dspy.Google(api_key=self.llm_config["api_key"], model=self.llm_config["model"])
-        elif self.llm_choice == "ollama":
+        if self.llm_choice == "ollama":
             # Assuming you have a way to interact with Ollama via an API or a library
             return dspy.OllamaLocal(model=self.llm_config["model"], api_base=self.llm_config["api_base"], api_key=self.llm_config["api_key"])
             # return dspy.Ollama(url=self.llm_config["url"], model=self.llm_config["model"])
+        # elif self.llm_choice == "google":
+        #     genai.configure(api_key=self.llm_config["api_key"])
+        #     return genai.GenerativeModel(self.llm_config["model"])
         else:
-            raise ValueError(f"Unknown LLM choice: {self.llm_choice}")
+            return dspy.LM(api_key=self.llm_config["api_key"], model=self.llm_config["model"])
+  
         
 
 if __name__ == "__main__":
