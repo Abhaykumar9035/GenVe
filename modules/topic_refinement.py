@@ -6,6 +6,7 @@ import google.generativeai as genai
 class TopicRefinement(dspy.Module):
     def __init__(self):
         super().__init__()
+        print(config)
         self.llm_choice = config['module_assignments']["topic_refinement"]
         self.llm_config = config['llms'][self.llm_choice]
         self.generate_refined_prompt = dspy.ChainOfThought(
@@ -47,5 +48,5 @@ class TopicRefinement(dspy.Module):
 
 if __name__ == "__main__":
     module = TopicRefinement()
-    prediction = module("How to build a chatbot using Python")
+    prediction = module("Explain the concept of Singular Value decompsotion")
     print(prediction.refined_prompt)
