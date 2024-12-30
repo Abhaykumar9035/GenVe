@@ -1,0 +1,6 @@
+dspy-ai
+manim
+moviepy
+openai
+google-generativeai
+pytest
