@@ -1,11 +1,17 @@
 ****GenVe (Generative Video Explainers)****
+
 **Overview**
+
 GenVe is a tool designed to automate the generation of Manim-based explainer videos using a scene description. It takes detailed descriptions of mathematical concepts or processes and creates animated visuals through the Manim library. It allows seamless integration with large language models to generate the required animation code.
+
+
 
 **Workflow**
 Input: A detailed scene description including text, visual cues, and transcript.
 Processing: The scene description is passed to a pre-configured large language model.
 Output: The model generates the corresponding Manim code for animation.
+
+
 
 **Installation**
 Clone the repository:
