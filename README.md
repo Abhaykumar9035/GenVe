@@ -5,6 +5,8 @@ It enables educators, creators, and developers to generate high-quality explaine
 
 Whether you want to animate algebraic derivations, geometric constructions, or conceptual visualizations, GenVe handles the Manim code generation for you—end-to-end.
 
+![image alt](https://github.com/Abhaykumar9035/GenVe/blob/328fe37a492e74471e914c7e78f814838ca6efa8/Gemini_Generated_Image_gt5jpgt5jpgt5jpg.png)
+
 ---
 
 ## 🚀 Key Features
