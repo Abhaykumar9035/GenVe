@@ -9,16 +9,19 @@ class PreambleGenerator(dspy.Module):
         self.llm_config = config['llms'][self.llm_choice]
 
     def forward(self, topic):
-        dspy.configure(lm=self.get_llm_instance())
-        preamble = dspy.ChainOfThought("topic -> context")(topic=topic)
-        return dspy.Prediction(context=preamble.context)
+        lm_instance = self.get_llm_instance()
+        with dspy.context(lm=lm_instance):
+            preamble = dspy.ChainOfThought("topic -> context")(topic=topic)
+            return dspy.Prediction(context=preamble.context)
     
     def get_llm_instance(self):
         """Instantiates the appropriate LLM based on configuration."""
         if self.llm_choice == "ollama":
-            # Assuming you have a way to interact with Ollama via an API or a library
-            return dspy.OllamaLocal(model=self.llm_config["model"], api_base=self.llm_config["api_base"], api_key=self.llm_config["api_key"])
-            # return dspy.Ollama(url=self.llm_config["url"], model=self.llm_config["model"])
+            return dspy.LM(
+                model=f"ollama_chat/{self.llm_config['model']}",
+                api_base=self.llm_config["api_base"],
+                api_key=self.llm_config.get("api_key", ""),
+            )
         # elif self.llm_choice == "google":
         #     genai.configure(api_key=self.llm_config["api_key"])
         #     return genai.GenerativeModel(self.llm_config["model"])
@@ -41,37 +44,37 @@ class ScriptGeneration(dspy.Module):
         )
 
     def forward(self, topic, refined_prompt):
+        lm_instance = self.get_llm_instance()
+        with dspy.context(lm=lm_instance):
+            preamble = self.generate_preamble(topic=topic)
+            context = preamble.context
 
-        dspy.configure(lm=self.get_llm_instance())
+            sections = [
+                "Introduction",
+                "Core Explanation",
+                "Visual Cues with concreate examples to improve understanding (We are using manim for animations)",
+                "Conclusion",
+                "Naration Script",
+                "Final Script fot Video Explainer using Narration Script and Visual Cues"
+            ]
+            script_sections = []
 
-        preamble = self.generate_preamble(topic=topic)
-        context = preamble.context
+            for section in sections:
+                query = f"Generate the {section} section for the topic: {topic}."
+                section_content = self.generate_section(context=context, query=query).answer
+                script_sections.append(f"{section}:\n{section_content}")
 
-        sections = [
-            "Introduction",
-            "Core Explanation",
-            "Visual Cues with concreate examples to improve understanding (We are using manim for animations)",
-            "Conclusion",
-            "Naration Script",
-            "Final Script fot Video Explainer using Narration Script and Visual Cues"
-            
-        ]
-        script_sections = []
-
-        for section in sections:
-            query = f"Generate the {section} section for the topic: {topic}."
-            section_content = self.generate_section(context=context, query=query).answer
-            script_sections.append(f"{section}:\n{section_content}")
-
-        final_script = "\n\n".join(script_sections)
-        return dspy.Prediction(final_script=final_script)
+            final_script = "\n\n".join(script_sections)
+            return dspy.Prediction(final_script=final_script)
     
     def get_llm_instance(self):
         """Instantiates the appropriate LLM based on configuration."""
         if self.llm_choice == "ollama":
-            # Assuming you have a way to interact with Ollama via an API or a library
-            return dspy.OllamaLocal(model=self.llm_config["model"], api_base=self.llm_config["api_base"], api_key=self.llm_config["api_key"])
-            # return dspy.Ollama(url=self.llm_config["url"], model=self.llm_config["model"])
+            return dspy.LM(
+                model=f"ollama_chat/{self.llm_config['model']}",
+                api_base=self.llm_config["api_base"],
+                api_key=self.llm_config.get("api_key", ""),
+            )
         # elif self.llm_choice == "google":
         #     genai.configure(api_key=self.llm_config["api_key"])
         #     return genai.GenerativeModel(self.llm_config["model"])

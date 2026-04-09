@@ -1,0 +1,27 @@
+llms:
+    openai:
+        api_key: "API"
+        model: "gpt-4o-mini"
+    google:
+        api_key: "AIzaSyCt_99EHzoe3K6uxQ86JBQbo6LuUSl3pnk"
+        model: "gemini/gemini-2.0-flash-exp"
+    ollama:
+        model: "gemma3:4b"
+        api_base: "http://localhost:11434"
+        api_key: ""
+
+module_assignments:
+    topic_refinement: "ollama"
+    script_generation: "ollama"
+    script_evaluation: "ollama"
+    manim_code_generation: "ollama"
+    scene_management: "ollama"
+
+manim_settings:
+    quality: "medium_quality"
+
+pipeline:
+    generated_dir: "generated"
+    output_dir: "output"
+    tts:
+        language: "en"

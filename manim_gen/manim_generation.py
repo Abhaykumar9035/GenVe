@@ -13,26 +13,28 @@ class ManimCodeGenerator(dspy.Module):
         )
         
     def forward(self, scene_description):
-        dspy.configure(lm=self.get_llm_instance())
-
-        prompt = (
-            "Generate Manim code for the following scene description:\n"
-            f"{scene_description}\n\n"
-            "We do not import images or videos in this code. "
-            "We code visulaztion using manim code only nothing else"
-            "Scene Description: incudes text, visual cues and transcript"
-            "The code should create an animation that visually explains the concept "
-            "and aligns with the provided text and visual cues."
-        )
-        manim_code = self.generate_manim_code(scene_description=prompt).manim_code
-        return dspy.Prediction(manim_code=manim_code)
+        lm_instance = self.get_llm_instance()
+        with dspy.context(lm=lm_instance):
+            prompt = (
+                "Generate Manim code for the following scene description:\n"
+                f"{scene_description}\n\n"
+                "We do not import images or videos in this code. "
+                "We code visulaztion using manim code only nothing else"
+                "Scene Description: incudes text, visual cues and transcript"
+                "The code should create an animation that visually explains the concept "
+                "and aligns with the provided text and visual cues."
+            )
+            manim_code = self.generate_manim_code(scene_description=prompt).manim_code
+            return dspy.Prediction(manim_code=manim_code)
 
     def get_llm_instance(self):
         """Instantiates the appropriate LLM based on configuration."""
         if self.llm_choice == "ollama":
-            # Assuming you have a way to interact with Ollama via an API or a library
-            return dspy.OllamaLocal(model=self.llm_config["model"], api_base=self.llm_config["api_base"], api_key=self.llm_config["api_key"])
-            # return dspy.Ollama(url=self.llm_config["url"], model=self.llm_config["model"])
+            return dspy.LM(
+                model=f"ollama_chat/{self.llm_config['model']}",
+                api_base=self.llm_config["api_base"],
+                api_key=self.llm_config.get("api_key", ""),
+            )
         # elif self.llm_choice == "google":
         #     genai.configure(api_key=self.llm_config["api_key"])
         #     return genai.GenerativeModel(self.llm_config["model"])
@@ -43,7 +45,7 @@ class ManimCodeGenerator(dspy.Module):
 if __name__ == "__main__":
 
     module = SceneManager()
-    prediction = module("""Introduction:
+    prediction = module(r"""Introduction:
 Singular Value Decomposition (SVD) is a powerful mathematical technique used in linear algebra to decompose a matrix into three distinct matrices. This decomposition provides insights into the structure and properties of the original matrix, making SVD an essential tool in various fields such as statistics, signal processing, and machine learning. By identifying the most significant singular values and vectors, SVD facilitates data compression, noise reduction, and the extraction of meaningful patterns from complex datasets. Its applications range from image processing, where it helps compress images while preserving essential features, to natural language processing, where it enhances information retrieval through methods like Latent Semantic Analysis. Understanding the concept of SVD is vital for effectively utilizing its capabilities in data analysis and manipulation.
 
 Background:

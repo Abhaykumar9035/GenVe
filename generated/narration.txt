@@ -1,0 +1,13 @@
+**(Narration Script)**
+
+"Let's explore Singular Value Decomposition, or SVD. At its core, SVD is a powerful technique for analyzing matrices, revealing valuable information about their structure and data.
+
+Imagine a matrix, let's call it *A*. SVD decomposes *A* into three matrices: *U*, *Σ*, and *V<span style='font-size: 0.9em'><sup>T</sup>* .
+
+*   *U* is an *m x m* matrix whose columns are the *left singular vectors* of *A*. These vectors form an orthonormal basis for the column space of *A*.
+*   *Σ* is an *m x n* diagonal matrix containing the *singular values* of *A*. These values are non-negative and represent the strength or importance of each singular vector. They’re arranged in descending order.
+*   *V<span style='font-size: 0.9em'><sup>T</sup>* is an *n x n* matrix whose columns are the *right singular vectors* of *A*. These vectors form an orthonormal basis for the row space of *A*.
+
+The singular values, σ<span style='font-size: 0.9em'><sub>1</sub></span> ≥ σ<span style='font-size: 0.9em'><sub>2</sub></span> ≥ ... ≥ σ<span style='font-size: 0.9em'><sub>r</sub></span> = 0, are the square roots of the eigenvalues of both *A<span style='font-size: 0.9em'><sup>T</sup>A</span>* and *AA<span style='font-size: 0.9em'><sup>T</sup>*.  The number of non-zero singular values equals the rank of *A*.
+
+This decomposition tells us a lot about the data. The singular vectors are the principal components – the directions of greatest variance.  We can use SVD for dimensionality reduction, retaining only the most significant singular values and vectors to approximate the original matrix, preserving the most important information.  For example, consider a 2x2 matrix where SVD yields two singular values and corresponding left and right singular vectors. This highlights the fundamental building blocks for representing the data effectively.”

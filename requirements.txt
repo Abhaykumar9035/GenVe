@@ -4,3 +4,4 @@ moviepy
 openai
 google-generativeai
 pytest
+gTTS
